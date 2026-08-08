@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Astaga Bercanda</title>
+<meta name="theme-color" content="#0e0f1a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #f4f2ec;
+    --ink-dim: rgba(244,242,236,0.55);
+    --accent: #5b7cff;
+    --surface: rgba(15,16,28,0.55);
+    --surface-solid: #14152a;
+    --ring: rgba(244,242,236,0.16);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    color: var(--ink);
+    background: #0e0f1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    isolation: isolate;
+  }
+
+  /* Ambient blurred backdrop, sampled from the cover itself */
+  .backdrop {
+    position: fixed;
+    inset: -10%;
+    background-image: var(--cover-url);
+    background-size: cover;
+    background-position: center;
+    filter: blur(60px) saturate(1.3) brightness(0.45);
+    transform: scale(1.15);
+    z-index: -2;
+  }
+  .backdrop::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 100% at 50% 0%, rgba(14,15,26,0.15), rgba(14,15,26,0.92) 75%);
+  }
+
+  .player {
+    width: min(92vw, 380px);
+    padding: 28px 26px 32px;
+    border-radius: 28px;
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 18px;
+    align-self: flex-start;
+  }
+
+  .art-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 40px -16px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
+  }
+
+  .art {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transform-origin: center;
+    animation: spin 18s linear infinite;
+    animation-play-state: paused;
+  }
+  .art-wrap.playing .art { animation-play-state: running; }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .art { animation: none !important; }
+  }
+
+  .meta {
+    width: 100%;
+    margin-top: 22px;
+    text-align: left;
+  }
+
+  .title {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+
+  .seek {
+    width: 100%;
+    margin-top: 24px;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--ring);
+    outline: none;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--accent) var(--fill, 0%), var(--ring) 0);
+  }
+  input[type="range"]::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--ring);
+  }
+  input[type="range"]::-moz-range-progress {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--ink);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    margin-top: -5.5px;
+    transition: transform 0.15s ease;
+  }
+  input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.25); }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border: none;
+    border-radius: 50%;
+    background: var(--ink);
+  }
+
+  .times {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-dim);
+    margin-top: 8px;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    margin-top: 26px;
+  }
+
+  .btn {
+    background: none;
+    border: none;
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .btn-skip {
+    width: 40px;
+    height: 40px;
+    opacity: 0.75;
+    transition: opacity 0.15s ease;
+  }
+  .btn-skip:active { opacity: 1; }
+  .btn-skip svg { width: 100%; height: 100%; }
+
+  .btn-play {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--surface-solid);
+    box-shadow: 0 12px 24px -8px rgba(0,0,0,0.6);
+    transition: transform 0.12s ease;
+  }
+  .btn-play:active { transform: scale(0.94); }
+  .btn-play svg { width: 26px; height: 26px; }
+
+  /* First-tap overlay to satisfy autoplay policy — a full hero, not a blank wall */
+  .gate {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    padding: 0 32px;
+  }
+  .gate.hidden {
+    opacity: 0;
+    transform: scale(1.04);
+    pointer-events: none;
+  }
+
+  .gate-glow {
+    position: absolute;
+    inset: -20%;
+    background-image: var(--cover-url);
+    background-size: cover;
+    background-position: center;
+    filter: blur(80px) saturate(1.5) brightness(0.5);
+    transform: scale(1.2);
+    z-index: -1;
+  }
+  .gate-glow::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(90% 70% at 50% 38%, rgba(14,15,26,0.05), rgba(14,15,26,0.95) 78%);
+  }
+
+  .gate-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 22px;
+  }
+
+  .gate-art {
+    width: min(64vw, 240px);
+    aspect-ratio: 1 / 1;
+    border-radius: 22px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 30px 70px -20px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.08);
+  }
+  .gate-art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .gate-btn {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(14,15,26,0.55);
+    border: 1.5px solid rgba(244,242,236,0.65);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 0 0 rgba(244,242,236,0.35);
+    animation: pulse 2.2s ease-out infinite;
+  }
+  .gate-btn svg { width: 22px; height: 22px; margin-left: 2px; fill: var(--ink); }
+
+  .gate-title {
+    margin-top: 26px;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .gate-label {
+    margin-top: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .gate-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 16px;
+    margin-top: 18px;
+  }
+  .gate-bars span {
+    width: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+    opacity: 0.85;
+    animation: bar 1.1s ease-in-out infinite;
+  }
+  .gate-bars span:nth-child(1) { height: 40%; animation-delay: -0.9s; }
+  .gate-bars span:nth-child(2) { height: 100%; animation-delay: -0.6s; }
+  .gate-bars span:nth-child(3) { height: 65%; animation-delay: -1.1s; }
+  .gate-bars span:nth-child(4) { height: 85%; animation-delay: -0.3s; }
+  .gate-bars span:nth-child(5) { height: 50%; animation-delay: -0.75s; }
+
+  @keyframes bar {
+    0%, 100% { transform: scaleY(0.35); }
+    50% { transform: scaleY(1); }
+  }
+
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(244,242,236,0.3); }
+    70% { box-shadow: 0 0 0 20px rgba(244,242,236,0); }
+    100% { box-shadow: 0 0 0 0 rgba(244,242,236,0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gate-bars span { animation: none; transform: scaleY(0.7); }
+    .gate-btn { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="backdrop" id="backdrop"></div>
+
+<div class="gate" id="gate">
+  <div class="gate-glow" id="gateGlow"></div>
+  <div class="gate-eyebrow">Now Playing</div>
+  <div class="gate-art">
+    <img id="gateArt" src="" alt="Astaga Bercanda cover art">
+    <button class="gate-btn" id="gateBtn" aria-label="Play">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+    </button>
+  </div>
+  <div class="gate-title">Astaga Bercanda</div>
+  <div class="gate-bars"><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="gate-label">Tap to play</div>
+</div>
+
+<main class="player">
+  <div class="eyebrow">Now Playing</div>
+
+  <div class="art-wrap" id="artWrap">
+    <img class="art" id="art" src="" alt="Astaga Bercanda cover art">
+  </div>
+
+  <div class="meta">
+    <div class="title">Astaga Bercanda</div>
+  </div>
+
+  <div class="seek">
+    <input type="range" id="seekBar" min="0" max="100" value="0" step="0.1">
+    <div class="times">
+      <span id="curTime">0:00</span>
+      <span id="durTime">0:00</span>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-skip" id="backBtn" aria-label="Back 10 seconds">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <button class="btn btn-play" id="playBtn" aria-label="Play">
+      <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+      <svg id="pauseIcon" viewBox="0 0 24 24" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/></svg>
+    </button>
+
+    <button class="btn btn-skip" id="fwdBtn" aria-label="Forward 10 seconds">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M12 5V2l5 4-5 4V7a5 5 0 1 0 5 5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</main>
+
+<audio id="audio" preload="auto" loop></audio>
+
+<script src="core.js"></script>
+</body>
+</html>
