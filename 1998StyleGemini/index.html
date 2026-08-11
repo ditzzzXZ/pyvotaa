@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>~*~ Welcome to Wonderful Indonesia Online (c) 1998 ~*~</title>
+    <style>
+        /* 1998 Retro Web Aesthetics */
+        body {
+            background-color: #000080; /* Classic Navy Blue */
+            background-image: repeating-linear-gradient(45deg, #000066 0, #000066 10px, #000080 10px, #000080 20px);
+            color: #FFFF00;
+            font-family: "Comic Sans MS", "Times New Roman", Times, serif;
+            margin: 0;
+            padding: 10px;
+        }
+
+        /* Centered vintage page layout using table structure */
+        .main-wrapper {
+            width: 95%;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #C0C0C0; /* Standard Windows 95 Silver */
+            border: 4px ridge #FFFFFF;
+            color: #000000;
+            padding: 10px;
+            box-shadow: 8px 8px 0px #000000;
+        }
+
+        header {
+            text-align: center;
+            background: linear-gradient(to right, #FF0000, #FFFFFF, #FF0000);
+            border: 3px inset #808080;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-family: "Impact", "Arial Black", sans-serif;
+            color: #0000FF;
+            text-shadow: 2px 2px #FFFF00;
+            font-size: 28px;
+            margin: 5px 0;
+            letter-spacing: 2px;
+        }
+
+        .marquee-container {
+            background-color: #000000;
+            color: #00FF00;
+            font-family: "Courier New", monospace;
+            font-weight: bold;
+            padding: 3px;
+            border: 2px inset #FFFFFF;
+            margin-bottom: 15px;
+        }
+
+        /* Classic 3D Bevel Buttons */
+        .btn-retro {
+            background-color: #C0C0C0;
+            border-top: 2px solid #FFFFFF;
+            border-left: 2px solid #FFFFFF;
+            border-right: 2px solid #000000;
+            border-bottom: 2px solid #000000;
+            padding: 4px 10px;
+            text-decoration: none;
+            color: #000000;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-retro:active {
+            border-top: 2px solid #000000;
+            border-left: 2px solid #000000;
+            border-right: 2px solid #FFFFFF;
+            border-bottom: 2px solid #FFFFFF;
+        }
+
+        /* Content Table Layout */
+        table.layout {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 5px;
+        }
+
+        td.sidebar {
+            width: 22%;
+            vertical-align: top;
+            background-color: #E0E0E0;
+            border: 2px inset #FFFFFF;
+            padding: 8px;
+            font-size: 13px;
+        }
+
+        td.content {
+            vertical-align: top;
+            background-color: #FFFFFF;
+            border: 2px inset #808080;
+            padding: 12px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .box-header {
+            background-color: #000080;
+            color: #FFFFFF;
+            font-weight: bold;
+            padding: 3px 6px;
+            font-size: 13px;
+            margin-top: 0;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        /* Vintage Web Graphics (pure CSS approximations) */
+        .hit-counter {
+            background-color: #000000;
+            color: #00FF00;
+            font-family: "Courier New", monospace;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            padding: 3px 8px;
+            border: 2px inset #808080;
+            display: inline-block;
+        }
+
+        .under-construction {
+            background: repeating-linear-gradient(
+                -45deg,
+                #000000,
+                #000000 10px,
+                #FFFF00 10px,
+                #FFFF00 20px
+            );
+            color: #000000;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px;
+            border: 2px outset #FFFFFF;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+
+        .under-construction-text {
+            background-color: #FFFF00;
+            padding: 2px 6px;
+            display: inline-block;
+        }
+
+        /* Blinking Animation for vintage <blink> */
+        .blink {
+            animation: blinker 1s linear infinite;
+            color: #FF0000;
+            font-weight: bold;
+        }
+
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+
+        a {
+            color: #0000FF;
+            text-decoration: underline;
+        }
+
+        a:visited {
+            color: #800080;
+        }
+
+        a:hover {
+            color: #FF0000;
+            background-color: #FFFF00;
+        }
+
+        hr.rainbow {
+            height: 4px;
+            border: none;
+            background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+            margin: 15px 0;
+        }
+
+        .flag-box {
+            width: 80px;
+            height: 50px;
+            border: 1px solid #000;
+            margin: 5px auto;
+        }
+
+        .flag-red {
+            background-color: #FF0000;
+            height: 50%;
+        }
+
+        .flag-white {
+            background-color: #FFFFFF;
+            height: 50%;
+        }
+
+        .guestbook-entry {
+            border: 1px dashed #808080;
+            padding: 5px;
+            margin-bottom: 8px;
+            background-color: #FFFFF0;
+            font-size: 12px;
+        }
+
+        .midi-player {
+            background-color: #C0C0C0;
+            border: 2px outset #FFFFFF;
+            padding: 5px;
+            text-align: center;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive layout tweaks for smaller screens while keeping retro look */
+        @media (max-width: 650px) {
+            table.layout, table.layout tbody, table.layout tr, table.layout td {
+                display: block;
+                width: 100% !important;
+                box-sizing: border-box;
+            }
+            td.sidebar {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+
+    <!-- HEADER SECTION -->
+    <header>
+        <div style="font-size: 12px; color: #000000; font-weight: bold;">
+            *** WELCOME TO THE INFORMATION SUPERHIGHWAY ***
+        </div>
+        <h1>INDONESIA ONLINE '98</h1>
+        <div style="font-size: 14px; font-style: italic; color: #800000;">
+            "The Emerald of the Equator - 17,000+ Islands of Wonder!"
+        </div>
+        <div style="margin-top: 8px;">
+            <span class="blink">NEW!</span> Best Viewed in <b>Netscape Navigator 4.0</b> or <b>Internet Explorer 4.0</b> at 800x600 Resolution!
+        </div>
+    </header>
+
+    <!-- MARQUEE TICKER -->
+    <div class="marquee-container">
+        <marquee behavior="scroll" direction="left" scrollamount="4">
+            *** WELCOME SURFER! *** EXPLORE THE BEAUTY OF BALI, JAVA, SUMATRA & BEYOND! *** VISIT OUR GUESTBOOK BEFORE YOU LEAVE! *** LAST UPDATED: NOVEMBER 14, 1998 ***
+        </marquee>
+    </div>
+
+    <!-- MAIN TWO-COLUMN TABLE -->
+    <table class="layout">
+        <tr>
+            <!-- SIDEBAR NAVIGATION -->
+            <td class="sidebar">
+                <div class="box-header">NAVIGATION</div>
+                
+                <p>
+                    &#127760; <a href="#about">About Indonesia</a><br>
+                    &#127965; <a href="#geography">Islands & Maps</a><br>
+                    &#127835; <a href="#culture">Food & Culture</a><br>
+                    &#128004; <a href="#fauna">Wild Animals</a><br>
+                    &#128221; <a href="#guestbook">Sign Guestbook</a><br>
+                    &#128231; <a href="#contact">Webmaster Mail</a>
+                </p>
+
+                <div class="box-header">MIDI AUDIO</div>
+                <div class="midi-player">
+                    &#127925; <b>Gamelan_Beat.mid</b><br>
+                    <button class="btn-retro" onclick="toggleAudio()" id="audioBtn">► Play Sound</button>
+                    <br><span style="font-size: 9px; color: #555;">(Requires SoundBlaster 16)</span>
+                </div>
+
+                <div class="box-header">INDONESIA FLAG</div>
+                <div class="flag-box">
+                    <div class="flag-red"></div>
+                    <div class="flag-white"></div>
+                </div>
+                <center><small><b>Sang Saka Merah Putih</b></small></center>
+                <br>
+
+                <div class="box-header">COOL LINKS</div>
+                <p style="font-size: 11px;">
+                    &bull; <a href="#" onclick="alert('Redirecting to Yahoo! Search...'); return false;">Yahoo! Asia</a><br>
+                    &bull; <a href="#" onclick="alert('Opening AltaVista Search...'); return false;">AltaVista Search</a><br>
+                    &bull; <a href="#" onclick="alert('Error 404: Geocities page moved!'); return false;">Geocities/RainForest</a><br>
+                    &bull; <a href="#" onclick="alert('Connecting to WebRing...'); return false;">S.E. Asia WebRing</a>
+                </p>
+
+                <div class="box-header">VISITOR COUNTER</div>
+                <center>
+                    You are visitor no:<br>
+                    <div class="hit-counter" id="hitCounter">004829</div>
+                    <br><small>Since Oct 1, 1998</small>
+                </center>
+                <br>
+
+                <center>
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='88' height='31'><rect width='88' height='31' fill='%23000080'/><text x='5' y='18' fill='%23FFFFFF' font-family='sans-serif' font-size='9' font-weight='bold'>Netscape 4.0</text><text x='5' y='27' fill='%2300FF00' font-family='sans-serif' font-size='8'>NOW!</text></svg>" alt="Netscape Now!">
+                    <br><br>
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='88' height='31'><rect width='88' height='31' fill='%23C0C0C0' stroke='%23000'/><text x='10' y='15' fill='%23000' font-family='sans-serif' font-size='9' font-weight='bold'>GET IE 4.0</text><text x='8' y='26' fill='%230000FF' font-family='sans-serif' font-size='8'>ActiveX Inside</text></svg>" alt="Get IE 4.0">
+                </center>
+            </td>
+
+            <!-- MAIN CONTENT AREA -->
+            <td class="content">
+                
+                <h2 id="about" style="color: #800000; border-bottom: 2px dashed #808080; margin-top:0;">
+                    &#127759; Welcome to Republic of Indonesia!
+                </h2>
+
+                <p>
+                    <b>SELAMAT DATANG!</b> Welcome to the official personal homepage dedicated to the beautiful archipelago of <b>Indonesia</b>! Located in South East Asia, right between the Indian Ocean and the Pacific Ocean.
+                </p>
+
+                <div class="under-construction">
+                    <span class="under-construction-text">
+                        &#128679; SITE UNDER CONSTRUCTION - MORE GRAPHICS COMING SOON! &#128679;
+                    </span>
+                </div>
+
+                <table border="1" cellpadding="4" cellspacing="0" width="100%" bgcolor="#F0F0F0" style="font-size: 12px; border-color: #808080;">
+                    <tr bgcolor="#000080">
+                        <td colspan="2"><font color="#FFFFFF"><b>FAST FACTS (1998 EDITION)</b></font></td>
+                    </tr>
+                    <tr>
+                        <td width="35%"><b>Capital City:</b></td>
+                        <td>Jakarta (on Java Island)</td>
+                    </tr>
+                    <tr>
+                        <td><b>Total Islands:</b></td>
+                        <td>Over 17,500 islands! (6,000 inhabited)</td>
+                    </tr>
+                    <tr>
+                        <td><b>National Motto:</b></td>
+                        <td><i>Bhinneka Tunggal Ika</i> (Unity in Diversity)</td>
+                    </tr>
+                    <tr>
+                        <td><b>Population:</b></td>
+                        <td>~205 Million People</td>
+                    </tr>
+                    <tr>
+                        <td><b>Currency:</b></td>
+                        <td>Rupiah (IDR)</td>
+                    </tr>
+                </table>
+
+                <hr class="rainbow">
+
+                <h3 id="geography" style="color: #000080;">&#12593; Major Islands of the Archipelago</h3>
+                <p>Indonesia is famous for its massive chain of tropical islands. The 5 primary main islands are:</p>
+                <ul>
+                    <li><b>Sumatra:</b> Home to famous Lake Toba, volcanoes, and wild orangutans!</li>
+                    <li><b>Java:</b> The most populated island, where the capital Jakarta and historic temples of Borobudur are located!</li>
+                    <li><b>Kalimantan (Borneo):</b> Dense, lush rain forests full of rare exotic wildlife!</li>
+                    <li><b>Sulawesi:</b> Uniquely shaped island known for brilliant diving reefs and rich traditions!</li>
+                    <li><b>Irian Jaya (Papua):</b> Mysterious thick jungles and high mountains topped with snow!</li>
+                </ul>
+                <p><i>Special Mention:</i> <b>BALI</b> - The Island of the Gods! World famous for beautiful beaches, surfing, and traditional legong dance!</p>
+
+                <hr class="rainbow">
+
+                <h3 id="culture" style="color: #000080;">&#127835; Delicious Indonesian Cuisine & Culture</h3>
+                <p>
+                    Indonesian food uses rich spices, herbs, and chili peppers! Here are the top dishes you must try if you travel here:
+                </p>
+
+                <ol>
+                    <li><b>Nasi Goreng:</b> Authentic Indonesian fried rice, often served with a fried egg on top!</li>
+                    <li><b>Satay (Sate):</b> Grilled meat skewers served with mouth-watering peanut sauce!</li>
+                    <li><b>Rendang:</b> Slow-cooked spicy beef coconut curry originating from the Minangkabau people!</li>
+                    <li><b>Gado-Gado:</b> Fresh vegetable salad mixed with rich peanut dressing and crackers (krupuk)!</li>
+                </ol>
+
+                <div style="background-color: #FFFFCC; border: 1px solid #CCCC00; padding: 8px; font-size: 12px;">
+                    &#128161; <b>Did You Know?</b> The famous Batik cloth is handcrafted using hot wax and natural dyes to form intricate patterns! It is worn proudly for formal events!
+                </div>
+
+                <hr class="rainbow">
+
+                <h3 id="fauna" style="color: #000080;">&#128004; Exotic Wildlife</h3>
+                <p>Because of its tropical climate, Indonesia has unique animals found nowhere else on planet Earth:</p>
+                
+                <table border="0" width="100%">
+                    <tr>
+                        <td width="50%" align="center">
+                            <div style="border: 2px outset #FFF; background: #EAEAEA; padding: 5px;">
+                                <b>&#129422; Komodo Dragon</b><br>
+                                <small>The largest living lizard species in the world! Found on Komodo Island!</small>
+                            </div>
+                        </td>
+                        <td width="50%" align="center">
+                            <div style="border: 2px outset #FFF; background: #EAEAEA; padding: 5px;">
+                                <b>&#129440; Orangutan</b><br>
+                                <small>Gentle red-haired apes inhabiting the high canopy of Sumatra & Borneo!</small>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <hr class="rainbow">
+
+                <!-- GUESTBOOK SECTION -->
+                <h3 id="guestbook" style="color: #000080;">&#128221; Interactive Guestbook</h3>
+                <p>Please leave a message for the Webmaster! Let us know where you are surfing from!</p>
+
+                <div class="guestbook-entry">
+                    <b>Name:</b> CyberSurfer98 (<a href="#">cybersurfer@aol.com</a>)<br>
+                    <b>Date:</b> Nov 12, 1998 - 14:22 PST<br>
+                    <b>Comment:</b> Cool site bro! Love the Bali section. Greetings from California USA! 🏄‍♂️
+                </div>
+
+                <div class="guestbook-entry">
+                    <b>Name:</b> WebWanderer_SG<br>
+                    <b>Date:</b> Nov 08, 1998 - 09:15 GMT<br>
+                    <b>Comment:</b> Great information about Nasi Goreng! Now I am hungry. Bookmarking this page!
+                </div>
+
+                <form onsubmit="addGuestbookEntry(event)" style="background-color: #E0E0E0; border: 2px inset #FFF; padding: 10px; margin-top: 10px;">
+                    <div style="font-weight: bold; font-size: 12px; margin-bottom: 5px;">Sign the Guestbook:</div>
+                    <table border="0" style="font-size: 12px;">
+                        <tr>
+                            <td>Your Name:</td>
+                            <td><input type="text" id="gbName" required style="font-family: 'Courier New';"></td>
+                        </tr>
+                        <tr>
+                            <td>Email (optional):</td>
+                            <td><input type="text" id="gbEmail" style="font-family: 'Courier New';"></td>
+                        </tr>
+                        <tr>
+                            <td vertical-align="top">Comments:</td>
+                            <td><textarea id="gbComment" rows="3" cols="25" required style="font-family: 'Courier New';"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button type="submit" class="btn-retro">Submit Entry</button>
+                                <button type="reset" class="btn-retro">Clear</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+
+                <div id="newEntries"></div>
+
+                <hr class="rainbow">
+
+                <!-- CONTACT WEBMASTER -->
+                <h3 id="contact" style="color: #000080;">&#128231; Contact the Webmaster</h3>
+                <p style="font-size: 12px;">
+                    Got questions, broken links, or want to exchange web banners? Send an electronic mail message:
+                    <br><br>
+                    <a href="mailto:webmaster@indonesia-fanpage-98.com" onclick="alert('Opening your default mail client (e.g. Eudora or Outlook Express)...'); return false;">
+                        <button class="btn-retro">&#128231; Email Webmaster (webmaster@indonesia98.net)</button>
+                    </a>
+                </p>
+
+            </td>
+        </tr>
+    </table>
+
+    <!-- FOOTER -->
+    <footer style="text-align: center; margin-top: 15px; font-size: 11px; border-top: 2px groove #808080; padding-top: 10px;">
+        <p>
+            <b>[ <a href="#about">Home</a> | <a href="#geography">Islands</a> | <a href="#culture">Culture</a> | <a href="#fauna">Wildlife</a> | <a href="#guestbook">Guestbook</a> ]</b>
+        </p>
+        <p>
+            Copyright &copy; 1998 <b>IndoWeb Productions</b>. All Rights Reserved.<br>
+            Created with <b>Microsoft FrontPage 98</b> and <b>Notepad</b>.<br>
+            Hosted on <i>GeoCities - Rainforest Neighborhood</i>.
+        </p>
+        <div style="font-size: 10px; color: #555;">
+            Best viewed in 640x480 or 800x600 resolution with 256 colors or higher.
+        </div>
+    </footer>
+
+</div>
+
+<!-- RETRO INTERACTIVE JAVASCRIPT -->
+<script>
+    // Simulate background 8-bit synthetic audio using Web Audio API
+    let audioCtx = null;
+    let isPlaying = false;
+    let timerId = null;
+
+    function toggleAudio() {
+        const btn = document.getElementById('audioBtn');
+        if (!isPlaying) {
+            startRetroTune();
+            btn.innerHTML = "■ Stop Sound";
+            isPlaying = true;
+        } else {
+            stopRetroTune();
+            btn.innerHTML = "► Play Sound";
+            isPlaying = false;
+        }
+    }
+
+    function startRetroTune() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88]; // Pentatonic-like simple loop
+        let step = 0;
+
+        timerId = setInterval(() => {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'square'; // Classic retro chip sound
+            osc.frequency.value = notes[step % notes.length] * (step % 2 === 0 ? 1 : 1.25);
+            
+            gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
+
+            step++;
+        }, 250);
+    }
+
+    function stopRetroTune() {
+        if (timerId) {
+            clearInterval(timerId);
+            timerId = null;
+        }
+    }
+
+    // Guestbook submission simulator
+    function addGuestbookEntry(e) {
+        e.preventDefault();
+        const name = document.getElementById('gbName').value;
+        const email = document.getElementById('gbEmail').value;
+        const comment = document.getElementById('gbComment').value;
+        
+        const now = new Date();
+        const dateStr = now.toLocaleDateString() + " - " + now.toLocaleTimeString();
+
+        const container = document.getElementById('newEntries');
+        const entryDiv = document.createElement('div');
+        entryDiv.className = 'guestbook-entry';
+        entryDiv.style.backgroundColor = '#E6FFE6'; // Highlight new entry
+        
+        entryDiv.innerHTML = `
+            <b>Name:</b> ${escapeHTML(name)} ${email ? `(<a href="#">${escapeHTML(email)}</a>)` : ''}<br>
+            <b>Date:</b> ${dateStr}<br>
+            <b>Comment:</b> ${escapeHTML(comment)}
+        `;
+
+        container.insertBefore(entryDiv, container.firstChild);
+
+        // Reset form & give 90s style alert
+        e.target.reset();
+        alert("Thank you! Your entry has been posted to the guestbook!");
+    }
+
+    function escapeHTML(str) {
+        return str.replace(/[&<>'"]/g, 
+            tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag] || tag)
+        );
+    }
+
+    // Dynamic hit counter increments slightly for retro effect
+    window.onload = function() {
+        let counter = document.getElementById('hitCounter');
+        let val = parseInt(counter.innerText, 10);
+        val += Math.floor(Math.random() * 5) + 1;
+        counter.innerText = String(val).padStart(6, '0');
+    };
+</script>
+
+</body>
+</html>
+
