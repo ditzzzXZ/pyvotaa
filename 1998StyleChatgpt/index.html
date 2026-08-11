@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indonesia Online - Mengenal Indonesia</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #c0c0c0;
+            color: #000000;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 16px;
+        }
+
+        a {
+            color: #0000ee;
+            text-decoration: underline;
+        }
+
+        a:visited {
+            color: #551a8b;
+        }
+
+        .page {
+            width: 760px;
+            margin: 10px auto;
+            background: #ffffff;
+            border: 2px solid #000000;
+        }
+
+        .top {
+            background: #000080;
+            color: #ffffff;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .top h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .top p {
+            margin: 3px 0 0;
+            font-size: 15px;
+        }
+
+        .nav {
+            background: #ffff00;
+            border-top: 2px solid #000000;
+            border-bottom: 2px solid #000000;
+            padding: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .nav a {
+            margin: 0 8px;
+        }
+
+        .content {
+            padding: 10px;
+        }
+
+        .box {
+            border: 2px solid #000000;
+            margin-bottom: 12px;
+            background: #ffffff;
+        }
+
+        .box-title {
+            background: #008080;
+            color: #ffffff;
+            font-weight: bold;
+            padding: 4px;
+        }
+
+        .box-content {
+            padding: 8px;
+        }
+
+        .two-column {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .left {
+            width: 65%;
+            vertical-align: top;
+            padding-right: 8px;
+        }
+
+        .right {
+            width: 35%;
+            vertical-align: top;
+        }
+
+        .flag {
+            width: 220px;
+            height: 140px;
+            margin: 5px auto;
+            border: 2px solid #000000;
+            position: relative;
+            background: linear-gradient(
+                to bottom,
+                #ff0000 0%,
+                #ff0000 50%,
+                #ffffff 50%,
+                #ffffff 100%
+            );
+        }
+
+        .ascii {
+            font-family: "Courier New", monospace;
+            font-size: 12px;
+            white-space: pre;
+        }
+
+        .footer {
+            border-top: 2px solid #000000;
+            background: #808080;
+            color: #ffffff;
+            text-align: center;
+            padding: 8px;
+            font-size: 13px;
+        }
+
+        .counter {
+            display: inline-block;
+            background: #000000;
+            color: #00ff00;
+            font-family: "Courier New", monospace;
+            padding: 2px 5px;
+            border: 1px inset #ffffff;
+        }
+
+        .blink {
+            animation: blink 1s steps(2, start) infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                visibility: hidden;
+            }
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #000000;
+        }
+
+        .small {
+            font-size: 13px;
+        }
+
+        .quote {
+            background: #ffffcc;
+            border: 1px solid #808000;
+            padding: 7px;
+        }
+
+        @media (max-width: 780px) {
+            .page {
+                width: 96%;
+            }
+
+            .two-column,
+            .two-column tbody,
+            .two-column tr,
+            .two-column td {
+                display: block;
+                width: auto;
+            }
+
+            .left {
+                padding-right: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- HEADER -->
+    <div class="top">
+        <h1>INDONESIA ONLINE</h1>
+        <p>Selamat Datang di Homepage Indonesia!</p>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="nav">
+        <a href="#home">Home</a> |
+        <a href="#sejarah">Sejarah</a> |
+        <a href="#geografi">Geografi</a> |
+        <a href="#budaya">Budaya</a> |
+        <a href="#fakta">Fakta</a> |
+        <a href="#kontak">Kontak</a>
+    </div>
+
+    <div class="content">
+
+        <!-- WELCOME -->
+        <div class="box" id="home">
+            <div class="box-title">:: SELAMAT DATANG ::</div>
+
+            <div class="box-content">
+
+                <table class="two-column">
+                    <tr>
+
+                        <td class="left">
+
+                            <h2>Indonesia</h2>
+
+                            <p>
+                                <b>Selamat datang!</b> Anda sedang mengunjungi
+                                halaman sederhana mengenai
+                                <b>Republik Indonesia</b>.
+                            </p>
+
+                            <p>
+                                Indonesia adalah negara kepulauan yang terletak
+                                di antara Benua Asia dan Australia serta di
+                                antara Samudra Hindia dan Samudra Pasifik.
+                            </p>
+
+                            <p>
+                                Indonesia terkenal karena keanekaragaman
+                                budaya, bahasa, suku bangsa, alam dan
+                                kehidupan masyarakatnya.
+                            </p>
+
+                            <div class="quote">
+                                <b>Semboyan:</b> Bhinneka Tunggal Ika
+                                <br>
+                                <i>"Berbeda-beda tetapi tetap satu."</i>
+                            </div>
+
+                        </td>
+
+                        <td class="right">
+
+                            <div class="flag"></div>
+
+                            <center>
+                                <b>Bendera Indonesia</b>
+                            </center>
+
+                            <p class="small">
+                                Merah melambangkan keberanian dan putih
+                                melambangkan kesucian.
+                            </p>
+
+                        </td>
+
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+
+        <!-- SEJARAH -->
+        <div class="box" id="sejarah">
+
+            <div class="box-title">:: SEJARAH SINGKAT INDONESIA ::</div>
+
+            <div class="box-content">
+
+                <p>
+                    Wilayah Indonesia telah dihuni manusia sejak zaman
+                    prasejarah. Berbagai kerajaan berkembang di kepulauan
+                    Nusantara, termasuk kerajaan bercorak Hindu-Buddha
+                    dan Islam.
+                </p>
+
+                <p>
+                    Pada masa berikutnya, bangsa-bangsa Eropa datang ke
+                    Nusantara. Portugis dan Belanda merupakan beberapa
+                    bangsa Eropa yang memiliki pengaruh besar dalam sejarah
+                    Indonesia.
+                </p>
+
+                <p>
+                    Perjuangan menuju kemerdekaan berlangsung selama
+                    berabad-abad dan melibatkan banyak tokoh serta daerah.
+                </p>
+
+                <p>
+                    <b>17 Agustus 1945</b> merupakan tanggal penting dalam
+                    sejarah Indonesia karena Soekarno dan Mohammad Hatta
+                    memproklamasikan kemerdekaan Indonesia.
+                </p>
+
+                <hr>
+
+                <center>
+                    <b>17 AGUSTUS 1945 — INDONESIA MERDEKA!</b>
+                </center>
+
+            </div>
+
+        </div>
+
+
+        <!-- GEOGRAFI -->
+        <div class="box" id="geografi">
+
+            <div class="box-title">:: GEOGRAFI ::</div>
+
+            <div class="box-content">
+
+                <table border="1" width="100%" cellpadding="5" cellspacing="0">
+
+                    <tr bgcolor="#c0c0c0">
+                        <th>Informasi</th>
+                        <th>Keterangan</th>
+                    </tr>
+
+                    <tr>
+                        <td>Nama</td>
+                        <td>Republik Indonesia</td>
+                    </tr>
+
+                    <tr>
+                        <td>Ibu kota</td>
+                        <td>Jakarta</td>
+                    </tr>
+
+                    <tr>
+                        <td>Wilayah</td>
+                        <td>Asia Tenggara</td>
+                    </tr>
+
+                    <tr>
+                        <td>Bentuk negara</td>
+                        <td>Negara kepulauan</td>
+                    </tr>
+
+                    <tr>
+                        <td>Mata uang</td>
+                        <td>Rupiah (Rp)</td>
+                    </tr>
+
+                    <tr>
+                        <td>Bahasa nasional</td>
+                        <td>Bahasa Indonesia</td>
+                    </tr>
+
+                </table>
+
+                <p>
+                    Indonesia terdiri dari ribuan pulau yang membentang luas
+                    dari barat ke timur. Beberapa pulau besar antara lain
+                    Sumatra, Jawa, Kalimantan, Sulawesi dan Papua.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- BUDAYA -->
+        <div class="box" id="budaya">
+
+            <div class="box-title">:: BUDAYA INDONESIA ::</div>
+
+            <div class="box-content">
+
+                <p>
+                    Salah satu hal yang membuat Indonesia menarik adalah
+                    keberagaman budayanya.
+                </p>
+
+                <ul>
+                    <li>Wayang</li>
+                    <li>Batik</li>
+                    <li>Gamelan</li>
+                    <li>Tari tradisional</li>
+                    <li>Rumah adat</li>
+                    <li>Bahasa daerah</li>
+                    <li>Masakan tradisional</li>
+                </ul>
+
+                <p>
+                    Setiap daerah mempunyai kebiasaan, kesenian dan tradisi
+                    yang berbeda. Keberagaman tersebut merupakan bagian
+                    penting dari identitas Indonesia.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- FAKTA -->
+        <div class="box" id="fakta">
+
+            <div class="box-title">:: TAHUKAH ANDA? ::</div>
+
+            <div class="box-content">
+
+                <ol>
+                    <li>Indonesia berada di kawasan Asia Tenggara.</li>
+                    <li>Indonesia merupakan negara kepulauan.</li>
+                    <li>Bahasa Indonesia adalah bahasa nasional.</li>
+                    <li>Rupiah merupakan mata uang Indonesia.</li>
+                    <li>Indonesia memiliki banyak gunung berapi.</li>
+                    <li>Indonesia mempunyai banyak budaya daerah.</li>
+                </ol>
+
+                <p class="blink">
+                    *** TERIMA KASIH SUDAH BERKUNJUNG! ***
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- LINK -->
+        <div class="box">
+
+            <div class="box-title">:: LINK PILIHAN ::</div>
+
+            <div class="box-content">
+
+                <p>
+                    <a href="https://www.indonesia.go.id/" target="_blank">
+                        Indonesia.go.id
+                    </a>
+                    - Portal resmi Indonesia
+                </p>
+
+                <p>
+                    <a href="https://id.wikipedia.org/wiki/Indonesia" target="_blank">
+                        Wikipedia - Indonesia
+                    </a>
+                </p>
+
+                <p>
+                    <a href="https://www.google.com/" target="_blank">
+                        Search the Web
+                    </a>
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- VISITOR -->
+        <div class="box" id="kontak">
+
+            <div class="box-title">:: WEBMASTER ::</div>
+
+            <div class="box-content">
+
+                <p>
+                    Website ini dibuat untuk mengenalkan Indonesia kepada
+                    pengunjung Internet.
+                </p>
+
+                <p>
+                    Email:
+                    <a href="mailto:webmaster@example.com">
+                        webmaster@example.com
+                    </a>
+                </p>
+
+                <center>
+
+                    <p>
+                        Anda adalah pengunjung ke:
+                    </p>
+
+                    <span class="counter">00001337</span>
+
+                    <p class="small">
+                        Best viewed with Netscape Navigator 4.0
+                        <br>
+                        800x600 resolution
+                    </p>
+
+                </center>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <div class="footer">
+
+        <b>INDONESIA ONLINE</b>
+        <br>
+        Copyright &copy; 1998 Indonesia Online
+        <br><br>
+
+        <span class="small">
+            This page is best viewed with Netscape Navigator.
+            <br>
+            Last Updated: December 1998
+        </span>
+
+    </div>
+
+</div>
+
+</body>
+                              </html>
