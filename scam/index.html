@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HandTracking Box Sandbox</title>
+    
+    <!-- Three.js untuk Grafis 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Cannon.js untuk Physics Engine -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
+    
+    <!-- MediaPipe untuk Hand Tracking -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a1a2e;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            user-select: none;
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* UI Overlay */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .header {
+            padding: 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+        }
+
+        h1 {
+            margin: 0 0 5px 0;
+            font-size: 28px;
+            color: #00ffcc;
+            text-shadow: 0 0 10px rgba(0,255,204,0.5);
+        }
+
+        p.subtitle {
+            margin: 0;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .controls {
+            padding: 20px;
+            pointer-events: auto;
+        }
+
+        button {
+            background: rgba(0, 255, 204, 0.2);
+            border: 2px solid #00ffcc;
+            color: #00ffcc;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #00ffcc;
+            color: #1a1a2e;
+            box-shadow: 0 0 15px #00ffcc;
+        }
+
+        /* Kamera Preview PIP */
+        #pip-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 320px;
+            height: 240px;
+            background: #000;
+            border-radius: 12px;
+            border: 3px solid #00ffcc;
+            box-shadow: 0 0 20px rgba(0,255,204,0.3);
+            overflow: hidden;
+            pointer-events: auto;
+            z-index: 20;
+        }
+
+        #pip-canvas {
+            width: 100%;
+            height: 100%;
+            transform: scaleX(-1); /* Mirror view untuk user */
+        }
+
+        .video-element {
+            display: none;
+        }
+
+        /* Loading Screen */
+        #loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 0.5s ease;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0,255,204,0.3);
+            border-top: 5px solid #00ffcc;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Status Indicator */
+        #status-pill {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.6);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #333;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ff3366;
+            box-shadow: 0 0 8px #ff3366;
+        }
+        .dot.active {
+            background: #00ffcc;
+            box-shadow: 0 0 8px #00ffcc;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loading">
+        <div class="spinner"></div>
+        <h2 id="loading-text">Menyiapkan Kamera & AI Model...</h2>
+        <p>Pastikan kamu memberikan izin akses kamera.</p>
+    </div>
+
+    <!-- Kontainer WebGL 3D -->
+    <div id="canvas-container"></div>
+
+    <!-- UI Layer -->
+    <div id="ui-layer">
+        <div class="header">
+            <h1>Grab & Throw!</h1>
+            <p class="subtitle">Gunakan tanganmu di depan kamera. Cubit jari telunjuk dan jempol untuk mengambil balok, lalu lempar!</p>
+        </div>
+        
+        <div class="controls">
+            <button id="btn-reset">Reset Balok</button>
+            <button id="btn-gravity">Mode Anti-Gravitasi</button>
+        </div>
+    </div>
+
+    <div id="status-pill">
+        <div class="dot" id="tracking-dot"></div>
+        <span id="tracking-status">Menunggu Tangan...</span>
+    </div>
+
+    <!-- PIP Camera -->
+    <div id="pip-container">
+        <video class="video-element" id="webcam" autoplay playsinline></video>
+        <canvas id="pip-canvas" width="640" height="480"></canvas>
+    </div>
+
+    <script>
+        // === 1. SETUP AUDIO (Synth Sederhana) ===
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+            
+            if (type === 'grab') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            } else if (type === 'throw') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 0.3);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            }
+        }
+
+
+        // === 2. SETUP THREE.JS & CANNON.JS (3D & Physics) ===
+        const container = document.getElementById('canvas-container');
+        
+        // Three.js
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x1a1a2e);
+        scene.fog = new THREE.Fog(0x1a1a2e, 10, 50);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 15, 30);
+        camera.lookAt(0, 5, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        container.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(10, 20, 10);
+        dirLight.castShadow = true;
+        scene.add(dirLight);
+
+        // Cannon.js (Physics)
+        const world = new CANNON.World();
+        world.gravity.set(0, -9.82, 0); // Gravitasi normal
+        world.broadphase = new CANNON.NaiveBroadphase();
+        world.solver.iterations = 10;
+
+        // Material Physics
+        const groundMaterial = new CANNON.Material();
+        const boxMaterial = new CANNON.Material();
+        const boxGroundContact = new CANNON.ContactMaterial(groundMaterial, boxMaterial, { friction: 0.4, restitution: 0.3 });
+        world.addContactMaterial(boxGroundContact);
+
+        // Lantai
+        const planeGeo = new THREE.PlaneGeometry(100, 100);
+        const planeMat = new THREE.MeshStandardMaterial({ 
+            color: 0x22223b, 
+            roughness: 0.8,
+            metalness: 0.2
+        });
+        const planeMesh = new THREE.Mesh(planeGeo, planeMat);
+        planeMesh.rotation.x = -Math.PI / 2;
+        planeMesh.receiveShadow = true;
+        scene.add(planeMesh);
+
+        const planeBody = new CANNON.Body({
+            mass: 0, // statis
+            shape: new CANNON.Plane(),
+            material: groundMaterial
+        });
+        planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+        world.addBody(planeBody);
+
+        // Kisi-kisi (Grid) untuk estetika
+        const gridHelper = new THREE.GridHelper(100, 50, 0x00ffcc, 0x4a4e69);
+        scene.add(gridHelper);
+
+        // Koleksi Balok
+        const boxes = [];
+        const boxSize = 2;
+        const boxGeo = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+        const colors = [0xff0066, 0x00ccff, 0xffcc00, 0x00ffcc, 0x9900ff];
+
+        function createBox(x, y, z) {
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const mat = new THREE.MeshStandardMaterial({ color: color });
+            const mesh = new THREE.Mesh(boxGeo, mat);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            scene.add(mesh);
+
+            const shape = new CANNON.Box(new CANNON.Vec3(boxSize/2, boxSize/2, boxSize/2));
+            const body = new CANNON.Body({
+                mass: 5,
+                shape: shape,
+                position: new CANNON.Vec3(x, y, z),
+                material: boxMaterial
+            });
+            world.addBody(body);
+
+            boxes.push({ mesh, body, originalColor: color });
+        }
+
+        // Spawn Balok Awal
+        function spawnInitialBoxes() {
+            for(let i=0; i<10; i++) {
+                createBox((Math.random()-0.5)*15, 10 + (i*3), (Math.random()-0.5)*10);
+            }
+        }
+        spawnInitialBoxes();
+
+        // Kursor Tangan 3D
+        const cursorGeo = new THREE.SphereGeometry(0.8, 16, 16);
+        const cursorMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
+        const handCursor = new THREE.Mesh(cursorGeo, cursorMat);
+        scene.add(handCursor);
+        handCursor.visible = false; // Sembunyikan sampai tangan terdeteksi
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+
+        // === 3. LOGIKA INTERAKSI & TRACKING TANGAN ===
+        
+        let isPinching = false;
+        let heldBox = null;
+        
+        // Variabel untuk menghitung kecepatan (velocity) lemparan
+        let handPositionsHistory = [];
+        let currentHandVelocity = new CANNON.Vec3(0,0,0);
+        let handActive = false;
+
+        // Memetakan koordinat 2D kamera ke 3D World (Z di-set fix agar mudah mengambil)
+        function mapTo3D(landmark) {
+            // Landmark x & y dari 0 - 1. Kita balik X karena kamera di-mirror
+            const x = -(landmark.x - 0.5) * 40; // Rentang horizontal
+            const y = -(landmark.y - 0.5) * 30 + 15; // Rentang vertikal + offset ke atas
+            const z = (landmark.z * -50); // Tambahkan sedikit kedalaman, tp fokus utamanya x dan y.
+            return new THREE.Vector3(x, y, z);
+        }
+
+        function processHandInteraction(landmarks) {
+            const thumbTip = landmarks[4];
+            const indexTip = landmarks[8];
+
+            // Posisi 3D rata-rata jempol dan telunjuk sebagai titik "cubitan"
+            const thumb3D = mapTo3D(thumbTip);
+            const index3D = mapTo3D(indexTip);
+            
+            const pinchPoint = new THREE.Vector3().addVectors(thumb3D, index3D).multiplyScalar(0.5);
+            handCursor.position.copy(pinchPoint);
+
+            // Simpan sejarah posisi untuk kalkulasi lemparan
+            handPositionsHistory.push(pinchPoint.clone());
+            if(handPositionsHistory.length > 5) handPositionsHistory.shift();
+
+            // Hitung kecepatan berdasarkan frame
+            if(handPositionsHistory.length > 1) {
+                const oldest = handPositionsHistory[0];
+                const newest = handPositionsHistory[handPositionsHistory.length - 1];
+                // Kecepatan = delta posisi. Pengali (10) menentukan kekuatan lemparan
+                currentHandVelocity.set(
+                    (newest.x - oldest.x) * 15,
+                    (newest.y - oldest.y) * 15,
+                    (newest.z - oldest.z) * 15
+                );
+            }
+
+            // Cek Jarak Jempol & Telunjuk (2D screen distance lebih stabil dari Z)
+            const dx = thumbTip.x - indexTip.x;
+            const dy = thumbTip.y - indexTip.y;
+            const pinchDist = Math.sqrt(dx*dx + dy*dy);
+            const pinchThreshold = 0.05; // Sesuaikan sensitivitas cubitan
+
+            const currentlyPinching = pinchDist < pinchThreshold;
+
+            if (currentlyPinching) {
+                handCursor.material.color.setHex(0x00ffcc); // Indikator visual mencubit (hijau)
+                
+                // Momen Mengambil Balok
+                if (!isPinching && !heldBox) {
+                    let closestBox = null;
+                    let minDist = 4.0; // Jarak jangkauan tangan ke balok
+
+                    for (const box of boxes) {
+                        const dist = handCursor.position.distanceTo(box.mesh.position);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            closestBox = box;
+                        }
+                    }
+
+                    if (closestBox) {
+                        heldBox = closestBox;
+                        heldBox.mesh.material.color.setHex(0xffffff); // Highlight balok saat dipegang
+                        playSound('grab');
+                    }
+                }
+                isPinching = true;
+
+                // Update posisi balok yang dipegang
+                if (heldBox) {
+                    // Buat posisinya ikuti tangan, dan hilangkan efek gravitasi sementara
+                    heldBox.body.position.copy(handCursor.position);
+                    heldBox.body.velocity.set(0,0,0);
+                    heldBox.body.angularVelocity.set(0,0,0);
+                }
+
+            } else {
+                handCursor.material.color.setHex(0xff0066); // Tidak mencubit (merah)
+                
+                // Momen Melepaskan (Melempar)
+                if (isPinching && heldBox) {
+                    heldBox.mesh.material.color.setHex(heldBox.originalColor);
+                    // Beri kecepatan (dorongan) pada balok sesuai kecepatan tangan
+                    heldBox.body.velocity.copy(currentHandVelocity);
+                    
+                    playSound('throw');
+                    heldBox = null;
+                }
+                isPinching = false;
+            }
+        }
+
+
+        // === 4. MEDIAPIPE (Kamera & AI) ===
+        const videoElement = document.getElementById('webcam');
+        const pipCanvas = document.getElementById('pip-canvas');
+        const pipCtx = pipCanvas.getContext('2d');
+        const loadingScreen = document.getElementById('loading');
+        const statusDot = document.getElementById('tracking-dot');
+        const statusText = document.getElementById('tracking-status');
+
+        let cameraAppStarted = false;
+
+        function onResults(results) {
+            // Sembunyikan loading screen saat frame pertama datang
+            if (!cameraAppStarted) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => loadingScreen.style.display = 'none', 500);
+                cameraAppStarted = true;
+            }
+
+            // Gambar kamera ke PIP
+            pipCtx.save();
+            pipCtx.clearRect(0, 0, pipCanvas.width, pipCanvas.height);
+            // Gambar gambar kamera (dibalik horizontal)
+            pipCtx.translate(pipCanvas.width, 0);
+            pipCtx.scale(-1, 1);
+            pipCtx.drawImage(results.image, 0, 0, pipCanvas.width, pipCanvas.height);
+            
+            // Gambar Tulang Tangan (Skeleton) di PIP
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                handActive = true;
+                handCursor.visible = true;
+                statusDot.classList.add('active');
+                statusText.innerText = "Tangan Terdeteksi!";
+                
+                for (const landmarks of results.multiHandLandmarks) {
+                    drawConnectors(pipCtx, landmarks, HAND_CONNECTIONS, {color: '#00ffcc', lineWidth: 3});
+                    drawLandmarks(pipCtx, landmarks, {color: '#ff0066', lineWidth: 1, radius: 4});
+                    
+                    // Proses Logika 3D
+                    processHandInteraction(landmarks);
+                }
+            } else {
+                handActive = false;
+                handCursor.visible = false;
+                statusDot.classList.remove('active');
+                statusText.innerText = "Mencari Tangan...";
+                
+                // Lepaskan balok jika tangan hilang dari layar
+                if (heldBox) {
+                    heldBox.mesh.material.color.setHex(heldBox.originalColor);
+                    heldBox = null;
+                    isPinching = false;
+                }
+            }
+            pipCtx.restore();
+        }
+
+        const hands = new Hands({locateFile: (file) => {
+            return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+        }});
+
+        hands.setOptions({
+            maxNumHands: 1, // Kita pakai 1 tangan agar lebih fokus performanya
+            modelComplexity: 1,
+            minDetectionConfidence: 0.6,
+            minTrackingConfidence: 0.6
+        });
+        hands.onResults(onResults);
+
+        const aiCamera = new Camera(videoElement, {
+            onFrame: async () => {
+                await hands.send({image: videoElement});
+            },
+            width: 640,
+            height: 480
+        });
+        aiCamera.start();
+
+
+        // === 5. GAME LOOP (Animasi) ===
+        const clock = new THREE.Clock();
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            const dt = clock.getDelta();
+            
+            // Update Fisika
+            world.step(1 / 60, dt, 3);
+            
+            // Sinkronisasi posisi Fisika ke Mesh Visual 3D
+            for (const box of boxes) {
+                // Jika balok sedang TIDAK dipegang, biarkan fisika mengatur posisinya
+                if (heldBox !== box) {
+                    box.mesh.position.copy(box.body.position);
+                    box.mesh.quaternion.copy(box.body.quaternion);
+                } else {
+                    // Jika dipegang, update rotasi fisika agar menyesuaikan (opsional)
+                    box.mesh.position.copy(box.body.position);
+                }
+
+                // Reset jika balok jatuh terlalu dalam ke bawah
+                if (box.body.position.y < -20) {
+                    box.body.position.set((Math.random()-0.5)*15, 15, (Math.random()-0.5)*10);
+                    box.body.velocity.set(0,0,0);
+                    box.body.angularVelocity.set(0,0,0);
+                }
+            }
+            
+            renderer.render(scene, camera);
+        }
+        animate();
+
+
+        // === 6. INTERAKSI TOMBOL (Exciting Features) ===
+        let isZeroGravity = false;
+        
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            for (const box of boxes) {
+                box.body.position.set((Math.random()-0.5)*20, 15 + Math.random()*10, (Math.random()-0.5)*10);
+                box.body.velocity.set(0,0,0);
+                box.body.angularVelocity.set(0,0,0);
+            }
+        });
+
+        document.getElementById('btn-gravity').addEventListener('click', (e) => {
+            isZeroGravity = !isZeroGravity;
+            if(isZeroGravity) {
+                world.gravity.set(0, 0.5, 0); // Melayang perlahan ke atas
+                e.target.style.background = '#00ffcc';
+                e.target.style.color = '#1a1a2e';
+                e.target.innerText = "Kembalikan Gravitasi";
+                
+                // Beri dorongan acak sedikit
+                boxes.forEach(b => b.body.velocity.set((Math.random()-0.5)*5, Math.random()*5, (Math.random()-0.5)*5));
+            } else {
+                world.gravity.set(0, -9.82, 0); // Normal
+                e.target.style.background = 'rgba(0, 255, 204, 0.2)';
+                e.target.style.color = '#00ffcc';
+                e.target.innerText = "Mode Anti-Gravitasi";
+            }
+        });
+
+    </script>
+</body>
+</html>
+
